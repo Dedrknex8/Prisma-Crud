@@ -1,5 +1,6 @@
 
 
+const { Prisma } = require('@prisma/client');
 const { get } = require('../routes/developer-routes');
 const gameService = require('../services/gameSerevice');
 
@@ -31,7 +32,7 @@ exports.getallgame = async(req,res)=>{
     try {
         const getGames = await gameService.getAllGame();
 
-        console.log("game found",getGames);
+        console.log("game found");
         
         return res.status(200).json({
             success: true,
@@ -44,5 +45,34 @@ exports.getallgame = async(req,res)=>{
         res.status(400).json({
             success: false
         })
+    }
+}
+
+exports.deleteGame = async(req,res)=>{
+    try {
+
+
+        const deleteGame = await gameService.deletegame(parseInt(req.params.id));
+
+        if (!deleteGame) {
+            return res.status(400).json({
+                success: false,
+                message: `Cann't find game with id:  ${req.params.id}`
+            })
+        } 
+        console.log("game Deleted");
+        
+        return res.status(200).json({
+            success: true,
+            message: `game deleted with ${req.params.id}`
+        })
+
+
+    } catch (error) {
+        console.log('Error while deleting Game',error);
+        
+        res.status(400).json({
+            success: false
+        });
     }
 }

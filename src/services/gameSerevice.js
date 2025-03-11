@@ -30,4 +30,20 @@ async function getAllGame() {
     return games;
 }
 
-module.exports = { addGame,getAllGame };
+async function deletegame(id){
+    try {
+        const deleteGame = await prisma.games.delete({
+            where: { id },
+            include: { developer: true },
+        });
+
+        return deleteGame;
+
+
+    } catch (error) {
+        console.log('Error while deleting Game',error);
+        
+    }
+}
+
+module.exports = { addGame,getAllGame,deletegame };
