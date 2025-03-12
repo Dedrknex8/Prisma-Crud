@@ -37,10 +37,52 @@ async function getGameById(id){
             where : {id},
             include: {developer:true}
         });
-    
         return game;
     } catch (error) {
         console.log(`Error findin game by Id ${error}`);
+        
+    }
+}
+
+async function updateGame(id,newTitle){
+    try {
+        // const game = await prisma.games.findUnique({
+        //     where : { id },
+        //     include  : { developer:true }
+        // });
+        
+        // const updatedGame = await prisma.games.update({
+        //     where : {id},
+        //     data:{title : newTitle},
+        //     include:{developer:true}
+        // });
+
+        
+
+        // return updatedGame;
+
+        //USING TRANSACTION
+
+        const updatedGame = await prisma.$transaction(async (prisma)=>{
+            const game = await prisma.games.findUnique({
+                where : {id}
+            });
+
+            if(!game){
+                throw new Error(`Game with id ${id} not found`);
+            }
+
+            return prisma.games.update({
+                where : {id},
+                data : {title: newTitle},
+                include: {developer:true}
+            })
+        })
+
+
+    } catch (error) {
+        console.log('error while updating',error);
+        throw error;
         
     }
 }
@@ -61,4 +103,4 @@ async function deletegame(id){
     }
 }
 
-module.exports = { addGame,getAllGame,deletegame,getGameById };
+module.exports = { addGame,getAllGame,deletegame,getGameById,updateGame };

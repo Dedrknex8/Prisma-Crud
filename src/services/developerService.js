@@ -21,5 +21,16 @@ async function addDeveloper(name) {
         throw error;
     }
 }
+async function deleteDeveloper(id){
+    const developer = prisma.developer.delete({
+        where : {id}
+    });
 
-module.exports = { addDeveloper };
+    if(!developer){
+        throw Error(`Canot find developer with ${id}`)
+    }
+
+    return developer;
+}
+
+module.exports = { addDeveloper,deleteDeveloper };

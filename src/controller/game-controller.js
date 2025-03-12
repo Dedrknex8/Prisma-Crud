@@ -75,8 +75,31 @@ exports.findGameById = async(req,res)=>{
         });
         
     }
+}
 
+//update game
+exports.updateGame = async(req,res)=>{
+    try {
+        const title = req.body.title;
+        const game = await gameService.updateGame(parseInt(req.params.id),title);
 
+        console.log("game title update  sucessfully");
+    
+    return res.status(200).json({
+        success: true,
+        message: `game updated sucessfully with ${req.params.id} ${title}`,
+        game
+    })
+
+    } catch (error) {
+        console.log(`Error fecthing game ${error} `);
+        throw error;
+        return res.status(500).json({
+            success: false,
+            message: `Can't update with ${req.params.id}`
+        });
+        
+    }
 }
 exports.deleteGame = async(req,res)=>{
     try {

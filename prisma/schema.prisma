@@ -20,7 +20,7 @@ model Games {
   id Int @id @default(autoincrement())
   title String
   publishDate DateTime
-  developer Developer @relation(fields: [developerId], references: [id])
+  developer Developer @relation(fields: [developerId], references: [id],onDelete: Cascade)
   developerId Int 
 }
 

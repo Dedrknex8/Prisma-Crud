@@ -23,3 +23,26 @@ exports.addDeveloper = async(req,res)=>{
         })
     }
 }
+
+exports.deleteDeveloper = async(req,res)=>{
+    try {
+        
+        const findDeveloper = await developerService.deleteDeveloper(parseInt(req.params.id));
+
+        console.log('User deleted sucessfullu !');
+        
+        res.status(201).json({
+            success : true,
+            message : 'Developer deleted sucessfully'
+        })
+
+    } catch (error) {
+        console.log(`Error deleting developer ${error}`);
+         res.status(401).json({
+            success : false,
+            message : 'Error deleting new developer'
+        })
+    
+        
+    }
+}
