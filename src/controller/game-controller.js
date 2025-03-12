@@ -48,6 +48,36 @@ exports.getallgame = async(req,res)=>{
     }
 }
 
+exports.findGameById = async(req,res)=>{
+
+    try {
+        const findGame = await gameService.getGameById(parseInt(req.params.id));
+
+    if (!findGame) {
+        return res.status(400).json({
+            success: false,
+            message: `Cann't find game with id:  ${req.params.id}`
+        })
+    } 
+    console.log("game Fetched sucessfully");
+    
+    return res.status(200).json({
+        success: true,
+        message: `game fetched with ${req.params.id}`,
+        findGame
+    })
+
+    } catch (error) {
+        console.log(`Error fecthing game ${error} `);
+        return res.status(200).json({
+            success: false,
+            message: `Can't fetch  deleted with ${req.params.id}`
+        });
+        
+    }
+
+
+}
 exports.deleteGame = async(req,res)=>{
     try {
 

@@ -30,6 +30,21 @@ async function getAllGame() {
     return games;
 }
 
+async function getGameById(id){
+    
+    try {
+        const game = await prisma.games.findUnique({
+            where : {id},
+            include: {developer:true}
+        });
+    
+        return game;
+    } catch (error) {
+        console.log(`Error findin game by Id ${error}`);
+        
+    }
+}
+
 async function deletegame(id){
     try {
         const deleteGame = await prisma.games.delete({
@@ -46,4 +61,4 @@ async function deletegame(id){
     }
 }
 
-module.exports = { addGame,getAllGame,deletegame };
+module.exports = { addGame,getAllGame,deletegame,getGameById };
