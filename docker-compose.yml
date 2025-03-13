@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15
+    container_name: postgres_prisma_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      postgres_prisma_db: primsa-learning
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: express_prisma_api
+    depends_on:
+      - database
+    environment:
+      - DATABASE_URL=postgresql://postgres:root@database:5432/primsa-learning?schema=public
+    ports:
+      - "2929:2929"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: [ "sh", "-c", "npx prisma generate && node src/server.js" ]
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus_prisma
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9091:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+
+volumes: 
+  postgres_data:
+
